@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight Sara | الثلج الوردي</title>
+    <style>
+        :root {
+            --primary: #ff4d8d;
+            --secondary: #ff7eb3;
+            --accent: #ffb8d9;
+            --pink-light: #ffcce6;
+            --pink-dark: #ff3385;
+            --gradient: linear-gradient(135deg, #ff4d8d, #ff7eb3, #ffb8d9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #000;
+            color: white;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: default;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* FULL SCREEN BACKGROUND VIDEO */
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+            overflow: hidden;
+        }
+
+        .background-video iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            pointer-events: none;
+            filter: brightness(0.8) contrast(1.1);
+            opacity: 0.9;
+        }
+
+        /* TRANSPARENT OVERLAY */
+        .transparent-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -5;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 77, 141, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 126, 179, 0.08) 0%, transparent 50%);
+        }
+
+        /* PROFILE SECTION */
+        .profile-container {
+            position: relative;
+            text-align: center;
+            animation: profile-float 8s ease-in-out infinite;
+        }
+
+        .quantum-ring {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+        }
+
+        .ring-layer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            opacity: 0.6;
+            animation: ring-pulse 4s ease-in-out infinite;
+        }
+
+        .ring-layer:nth-child(1) { 
+            width: 260px; 
+            height: 260px; 
+            border-color: rgba(255, 77, 141, 0.5);
+            animation-delay: 0s; 
+        }
+        .ring-layer:nth-child(2) { 
+            width: 220px; 
+            height: 220px; 
+            border-color: rgba(255, 126, 179, 0.5);
+            animation-delay: 0.5s; 
+        }
+        .ring-layer:nth-child(3) { 
+            width: 180px; 
+            height: 180px; 
+            border-color: rgba(255, 184, 217, 0.5);
+            animation-delay: 1s; 
+        }
+
+        .hologram-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+            animation: hologram-rotate 20s linear infinite;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+            transition: all 0.5s ease;
+            filter: brightness(1.05) contrast(1.1);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* INSTAGRAM BUTTON */
+        .instagram-button {
+            position: fixed;
+            bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(255, 77, 141, 0.25);
+            color: white;
+            text-decoration: none;
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 77, 141, 0.4);
+            backdrop-filter: blur(15px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 20px 50px rgba(255, 77, 141, 0.2);
+            z-index: 100;
+        }
+
+        .instagram-button:hover {
+            background: rgba(255, 77, 141, 0.35);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 30px 60px rgba(255, 77, 141, 0.3);
+            letter-spacing: 2px;
+        }
+
+        /* LIGHTNING CANVAS */
+        #lightning-container {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 49;
+            opacity: 0.7;
+        }
+
+        /* PINK SNOW CANVAS */
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* ANIMATIONS */
+        @keyframes profile-float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-15px) rotate(0.5deg) scale(1.01); }
+            50% { transform: translateY(5px) rotate(-0.5deg) scale(0.99); }
+            75% { transform: translateY(-10px) rotate(0.3deg) scale(1.005); }
+        }
+
+        @keyframes ring-pulse {
+            0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        @keyframes hologram-rotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .quantum-ring {
+                width: 240px;
+                height: 240px;
+            }
+
+            .hologram-container {
+                width: 160px;
+                height: 160px;
+            }
+
+            .ring-layer:nth-child(1) { width: 220px; height: 220px; }
+            .ring-layer:nth-child(2) { width: 190px; height: 190px; }
+            .ring-layer:nth-child(3) { width: 160px; height: 160px; }
+
+            .instagram-button {
+                padding: 16px 35px;
+                font-size: 1.1rem;
+                bottom: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quantum-ring {
+                width: 200px;
+                height: 200px;
+            }
+
+            .hologram-container {
+                width: 140px;
+                height: 140px;
+            }
+
+            .ring-layer:nth-child(1) { width: 180px; height: 180px; }
+            .ring-layer:nth-child(2) { width: 160px; height: 160px; }
+            .ring-layer:nth-child(3) { width: 140px; height: 140px; }
+
+            .instagram-button {
+                padding: 14px 30px;
+                font-size: 1rem;
+                bottom: 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Full Screen Background Video -->
+    <div class="background-video">
+        <iframe 
+            src="https://player.vimeo.com/video/1152045428?background=1&autoplay=1&muted=1&loop=1&autopause=0&quality=720p&controls=0&title=0&byline=0&portrait=0"
+            frameborder="0"
+            allow="autoplay; fullscreen"
+            title="Moonlight Background Video"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Transparent Overlay -->
+    <div class="transparent-overlay"></div>
+
+    <!-- Profile Section -->
+    <div class="profile-container">
+        <div class="quantum-ring">
+            <div class="ring-layer"></div>
+            <div class="ring-layer"></div>
+            <div class="ring-layer"></div>
+            
+            <div class="hologram-container">
+                <img src="https://i.postimg.cc/FFyS0zRB/username-moonlight-sara27-biography-19-n-njust-a-girl-chasing-her-dreams-full-name-Sarah.jpg" 
+                     alt="Moonlight Sara"
+                     class="profile-image"
+                     id="profileImage">
+            </div>
+        </div>
+    </div>
+
+    <!-- Instagram Button -->
+    <a href="https://www.instagram.com/moonlight.sara27/" 
+       target="_blank" 
+       class="instagram-button"
+       id="instagramButton">
+        <i class="fab fa-instagram"></i>
+        Follow in Instagram
+    </a>
+
+    <!-- عنصر الصوت المخفي -->
+    <audio id="audioPlayer" autoplay loop style="display: none;"></audio>
+
+    <!-- Lightning Canvas -->
+    <canvas id="lightning-container"></canvas>
+
+    <!-- Snow Canvas -->
+    <canvas id="snow-container"></canvas>
+
+    <script>
+        // Audio Player System
+        let audioPlayer = document.getElementById('audioPlayer');
+        let currentVolume = 80;
+        
+        // رابط أغنية "No One Noticed"
+        const audioDirectUrl = 'https://cdn.pixabay.com/download/audio/2022/03/19/audio_d0e7d8d537.mp3?filename=no-one-noticed-lofi-version-171709.mp3';
+        
+        // تهيئة مشغل الصوت
+        function initAudioPlayer() {
+            audioPlayer.src = audioDirectUrl;
+            audioPlayer.volume = currentVolume / 100;
+            
+            // محاولة تشغيل الصوت
+            const playAudio = () => {
+                audioPlayer.play().then(() => {
+                    console.log('الصوت يعمل في الخلفية');
+                }).catch((e) => {
+                    console.log('تعذر تشغيل الصوت تلقائياً:', e);
+                });
+            };
+            
+            // تشغيل عند تفاعل المستخدم
+            document.addEventListener('click', function initAudio() {
+                playAudio();
+                document.removeEventListener('click', initAudio);
+            });
+            
+            audioPlayer.load();
+        }
+
+        // Lightning System - بدون وميض
+        const lightningCanvas = document.getElementById('lightning-container');
+        const lightningCtx = lightningCanvas.getContext('2d');
+        
+        // Snow System - نقاط وردية تتهاطل
+        const snowCanvas = document.getElementById('snow-container');
+        const snowCtx = snowCanvas.getContext('2d');
+        
+        // ضبط حجم canvases
+        function resizeCanvases() {
+            lightningCanvas.width = window.innerWidth;
+            lightningCanvas.height = window.innerHeight;
+            snowCanvas.width = window.innerWidth;
+            snowCanvas.height = window.innerHeight;
+        }
+        
+        // مصفوفة للبرق
+        let lightningBolts = [];
+        
+        // مصفوفة للثلج الوردي
+        let snowParticles = [];
+        
+        // إنشاء نقاط الثلج الوردي
+        function createSnowParticles() {
+            // عدد النقاط
+            const particleCount = 150;
+            
+            for (let i = 0; i < particleCount; i++) {
+                snowParticles.push({
+                    x: Math.random() * snowCanvas.width,
+                    y: Math.random() * snowCanvas.height,
+                    radius: Math.random() * 4 + 1, // أحجام مختلفة
+                    speed: Math.random() * 1 + 0.5, // سرعات بطيئة
+                    opacity: Math.random() * 0.7 + 0.3,
+                    sway: Math.random() * 0.5 - 0.25, // حركة جانبية خفيفة
+                    color: Math.random() > 0.5 ? '#ff4d8d' : '#ff7eb3' // لونين ورديين
+                });
+            }
+        }
+        
+        // رسم وتحديث الثلج الوردي
+        function updateSnow() {
+            snowCtx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
+            
+            for (let i = 0; i < snowParticles.length; i++) {
+                const p = snowParticles[i];
+                
+                // تحديث الموضع
+                p.y += p.speed;
+                p.x += p.sway;
+                
+                // إعادة تعيين إذا تجاوزت الأسفل
+                if (p.y > snowCanvas.height) {
+                    p.y = -10;
+                    p.x = Math.random() * snowCanvas.width;
+                }
+                
+                // إعادة تعيين إذا تجاوزت الجوانب
+                if (p.x > snowCanvas.width) p.x = 0;
+                if (p.x < 0) p.x = snowCanvas.width;
+                
+                // رسم النقطة
+                snowCtx.beginPath();
+                snowCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                
+                // تأثير التوهج
+                const gradient = snowCtx.createRadialGradient(
+                    p.x, p.y, 0,
+                    p.x, p.y, p.radius * 2
+                );
+                gradient.addColorStop(0, `${p.color}${Math.floor(p.opacity * 255).toString(16).padStart(2, '0')}`);
+                gradient.addColorStop(1, `${p.color}00`);
+                
+                snowCtx.fillStyle = gradient;
+                snowCtx.fill();
+                
+                // تأثير الشكل الثلجي البسيط
+                snowCtx.beginPath();
+                snowCtx.arc(p.x - p.radius * 0.3, p.y - p.radius * 0.3, p.radius * 0.4, 0, Math.PI * 2);
+                snowCtx.fillStyle = `rgba(255, 255, 255, ${p.opacity * 0.5})`;
+                snowCtx.fill();
+            }
+            
+            requestAnimationFrame(updateSnow);
+        }
+        
+        // رسم البرق بدون وميض
+        function drawLightning() {
+            lightningCtx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
+            
+            // تحديد الجانب (يسار أو يمين)
+            const side = Math.random() > 0.5 ? 'left' : 'right';
+            let startX, endX;
+            
+            if (side === 'left') {
+                startX = Math.random() * lightningCanvas.width * 0.3; // الجانب الأيسر
+                endX = startX + Math.random() * 100 - 50; // حركة أفقية محدودة
+            } else {
+                startX = lightningCanvas.width * 0.7 + Math.random() * lightningCanvas.width * 0.3; // الجانب الأيمن
+                endX = startX + Math.random() * 100 - 50;
+            }
+            
+            let startY = -50;
+            let endY = lightningCanvas.height + 50;
+            
+            // رسم البرق
+            lightningCtx.beginPath();
+            lightningCtx.moveTo(startX, startY);
+            
+            // إنشاء مسار متعرج للبرق
+            let segments = Math.floor(Math.random() * 8) + 4;
+            let currentX = startX;
+            let currentY = startY;
+            const segmentHeight = (endY - startY) / segments;
+            
+            for (let i = 0; i < segments; i++) {
+                currentX += (Math.random() - 0.5) * 80;
+                currentY += segmentHeight;
+                lightningCtx.lineTo(currentX, currentY);
+            }
+            
+            // تدرج لوني للبرق
+            const gradient = lightningCtx.createLinearGradient(startX, startY, currentX, currentY);
+            gradient.addColorStop(0, 'rgba(255, 77, 141, 0.8)');
+            gradient.addColorStop(0.5, 'rgba(255, 126, 179, 0.6)');
+            gradient.addColorStop(1, 'rgba(255, 184, 217, 0.4)');
+            
+            lightningCtx.strokeStyle = gradient;
+            lightningCtx.lineWidth = 2;
+            lightningCtx.lineCap = 'round';
+            lightningCtx.stroke();
+        }
+        
+        // تشغيل البرق بشكل عشوائي
+        function startLightningEffect() {
+            function strike() {
+                const randomDelay = Math.random() * 6000 + 4000; // بين 4 إلى 10 ثوانٍ
+                setTimeout(() => {
+                    if (Math.random() > 0.4) { // 60% فرصة لحدوث البرق
+                        drawLightning();
+                    }
+                    strike();
+                }, randomDelay);
+            }
+            strike();
+        }
+        
+        // تفاعل صورة الملف الشخصي
+        document.getElementById('profileImage').addEventListener('click', function(event) {
+            // إضافة تأثير اهتزاز بسيط
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 300);
+            
+            // إنشاء جسيمات وردية
+            const rect = this.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    const size = Math.random() * 10 + 5;
+                    const color = Math.random() > 0.5 ? '#ff4d8d' : '#ff7eb3';
+                    
+                    particle.style.cssText = `
+                        position: fixed;
+                        left: ${centerX}px;
+                        top: ${centerY}px;
+                        width: ${size}px;
+                        height: ${size}px;
+                        background: ${color};
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 1000;
+                        animation: particle-fall ${Math.random() * 2 + 1}s ease-in forwards;
+                        opacity: ${Math.random() * 0.7 + 0.3};
+                        box-shadow: 0 0 15px ${color};
+                    `;
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.remove();
+                        }
+                    }, 2000);
+                }, i * 50);
+            }
+        });
+        
+        // تفاعل زر الإنستجرام
+        document.getElementById('instagramButton').addEventListener('mouseenter', function() {
+            // إنشاء جسيمات حول الزر
+            const rect = this.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.style.cssText = `
+                        position: fixed;
+                        left: ${centerX}px;
+                        top: ${centerY}px;
+                        width: 8px;
+                        height: 8px;
+                        background: #ff4d8d;
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 1000;
+                        animation: particle-float 1.5s ease-out forwards;
+                        box-shadow: 0 0 10px #ff4d8d;
+                    `;
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.remove();
+                        }
+                    }, 1500);
+                }, i * 100);
+            }
+        });
+        
+        // التهيئة عند التحميل
+        window.addEventListener('load', function() {
+            resizeCanvases();
+            initAudioPlayer();
+            createSnowParticles();
+            updateSnow();
+            startLightningEffect();
+            
+            // إضافة أنماط CSS للجسيمات
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes particle-fall {
+                    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+                    100% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 + 100}px) scale(0); opacity: 0; }
+                }
+                @keyframes particle-float {
+                    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+                    100% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * -100 - 50}px) scale(0); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // إعادة ضبط الحجم عند تغيير حجم النافذة
+        window.addEventListener('resize', resizeCanvases);
+    </script>
+</body>
+</html>
